@@ -1,4 +1,4 @@
-name = input("huu nhan")
+name = input("HongThien")
 age = int(input("21 "))  # Convert input to integer
 
 print("Hello, " + name + "!")
