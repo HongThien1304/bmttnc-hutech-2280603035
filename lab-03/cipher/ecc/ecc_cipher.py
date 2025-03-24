@@ -8,12 +8,12 @@ class ECCCipher:
         pass
 
     def generate_keys(self):
-        sk = ecdsa.SigningKey.generate() #Tạo khóa riêng tư
-        vk = sk.get_verifying_key() #Lấy khóa công khai từ khóa riêng
+        sk = ecdsa.SigningKey.generate()
+        vk = sk.get_verifying_key()     
 
         with open('cipher/ecc/keys/privateKey.pem', 'wb') as p:
             p.write(sk.to_pem())
-        
+
         with open('cipher/ecc/keys/publicKey.pem', 'wb') as p:
             p.write(vk.to_pem())
 
@@ -23,11 +23,16 @@ class ECCCipher:
 
         with open('cipher/ecc/keys/publicKey.pem', 'rb') as p:
             vk = ecdsa.VerifyingKey.from_pem(p.read())
-        
+
         return sk, vk
-    
+
     def sign(self, message, key):
         # Ký dữ liệu bằng khóa riêng tư
         return key.sign(message.encode('ascii'))
-    
-        
+
+    def verify(self, message, signature, key):
+        _, vk = self.load_keys()
+        try:
+            return vk.verify(signature, message.encode('ascii'))
+        except ecdsa.BadSignatureError:
+            return False
